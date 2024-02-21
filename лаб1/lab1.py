@@ -22,16 +22,16 @@ print("Кількість полів у кожному записі:", num_field
 
 # 3d task.
 print(f"\n\n3.1 Вивести 5 записів, починаючи з {K}-ого.")
-print(f"{df.iloc[K - 1:K + 4]}")
+print(f"{df.iloc[K - 1:K + 4].to_string()}")
 
 print(f"\n3.2 Вивести 3 * {K} + 2 (= {3 * K + 2}) останніх записів.")
-print(f"{df.iloc[-(3 * K + 2):]}")
+print(f"{df.iloc[-(3 * K + 2):].to_string()}")
 
 # =====================================================================================================
 
 # 4th task.
 print(f"\n\n4. Визначити та вивести тип полів кожного запису.")
-print(df.dtypes)
+print(df.dtypes.to_string())
 
 # =====================================================================================================
 
@@ -39,12 +39,12 @@ print(df.dtypes)
 print("\n\n5. Очистити текстові поля від зайвих пробілів. ")
 
 print("\nДо очищення: ")
-print(df[['Name', 'Country']].iloc[:5])
+print(df[['Name', 'Country']].iloc[:5].to_string())
 
 df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
 
 print("\nПісля очищення: ")
-print(df[['Name', 'Country']].iloc[:5])
+print(df[['Name', 'Country']].iloc[:5].to_string())
 
 # =====================================================================================================
 
@@ -69,11 +69,11 @@ print(df['Career Earnings'])
 
 print("\n\n7. Визначити записи із пропущеними даними та вивести їх на екран, після чого видалити з датафрейму. ")
 
-print(f"\nЗаписи із пропущеними даними: \n{df[df.isnull().any(axis=1)]}")
+print(f"\nЗаписи із пропущеними даними: \n{df[df.isnull().any(axis=1)].to_string()}")
 
 df = df.dropna(how='any')
 
-print(f"\nЗаписи із пропущеними даними після очищення: \n{df[df.isnull().any(axis=1)]}")
+print(f"\nЗаписи із пропущеними даними після очищення: \n{df[df.isnull().any(axis=1)].to_string()}")
 
 # =====================================================================================================
 
@@ -108,7 +108,8 @@ print(f"\nСписок полів після видалення: \n{list(df.colu
 print("\n\n10. Змінити порядок розташування полів таким чином: Rank, Name, Country, Pts, Total, Win, Lose, "
       "Winning Percentage.")
 
-df = df.reindex(columns=['Rank', 'Name', 'Country', 'Pts', 'Total', 'Win', 'Lose', 'Winning Percentage', 'Career Earnings'])
+df = df.reindex(columns=['Rank', 'Name', 'Country', 'Pts', 'Total', 'Win', 'Lose', 'Winning Percentage', 'Career '
+                                                                                                         'Earnings'])
 
 print(f"\nСписок полів після зміни порядку: \n{list(df.columns)}")
 
@@ -177,37 +178,30 @@ plt.show()
 
 # 15th task.
 
+print("\n\n15. Побудувати на одному графіку (тип графіка обрати самостійно!):"
+      "\n\ta. Середню кількість очок для кожної країни;"
+      "\n\tb. Середню кількість зіграних матчів тенісистами кожної країни.")
+
+mean_pts_by_country = df.groupby(df['Country'])['Pts'].mean().reset_index(name='Mean points by country')
+print(f"\nДатафрейм на основі якого будувався графік а. : \n{mean_pts_by_country.to_string()}")
+
+mean_played_matches_by_country = df.groupby(df['Country'])['Total'].mean().reset_index(name='Mean quantity of played matches by country')
+print(f"\nДатафрейм на основі якого будувався графік b. : \n{mean_played_matches_by_country.to_string()}")
+
+plt.figure(figsize=(10, 6))
+plt.plot(mean_pts_by_country['Country'], mean_pts_by_country['Mean points by country'], color='blue', marker='o', label='Mean points')
+
+plt.plot(mean_played_matches_by_country['Country'], mean_played_matches_by_country['Mean quantity of played matches by country'],
+         color='red', marker='o', label='Mean played matches')
+
+plt.xlabel('Country')
+plt.ylabel('Mean Value')
+plt.title('Mean Points and Mean Played Matches by Country')
+plt.xticks(rotation=90)
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+
+plt.show()
 
 
-# with open("Top100-2007.csv", "r") as file:
-#     records_lst = file.readlines()
-#
-#     # 2nd task
-#
-#     records_num = len(records_lst) - 1
-#     fields_num = len(records_lst[0])
-#
-#     print("\n2. Визначити та вивести кількість записів та кількість полів у кожному записі. ")
-#     print(f"Кількість записів: {records_num}")
-#     print(f"Кількість полів: {len(records_lst[0].split(','))}")
-#
-#     # =====================================================================================================
-#
-#     # 3d task
-#     print(f"\n3.1 Вивести 5 записів, починаючи з {K}-ого.")
-#
-#     for i in range(K, K + 6):
-#         print(records_lst[i].rstrip())
-#
-#     print("\n" + "_" * 50 + "\n\n")
-#     print(f"3.2 Вивести 3 * {K} + 2 (= {3 * K + 2}) останніх записів.")
-#
-#     start_val = records_num - (3 * K + 2)
-#     for i in range(start_val, len(records_lst)):
-#         print(records_lst[i].rstrip())
-#
-#     # =====================================================================================================
-#
-#     # 4th task
-#     print("4. Визначити та вивести тип полів кожного запису. ")
-#
