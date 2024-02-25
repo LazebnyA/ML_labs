@@ -22,10 +22,10 @@ print("Кількість полів у кожному записі:", num_field
 
 # 3d task.
 print(f"\n\n3.1 Вивести 5 записів, починаючи з {K}-ого.")
-print(f"{df.iloc[K - 1:K + 4].to_string()}")
+print(df.iloc[K - 1:K + 4].to_string())
 
 print(f"\n3.2 Вивести 3 * {K} + 2 (= {3 * K + 2}) останніх записів.")
-print(f"{df.iloc[-(3 * K + 2):].to_string()}")
+print(df.iloc[-(3 * K + 2):].to_string())
 
 # =====================================================================================================
 
@@ -141,7 +141,7 @@ print("\n\n12. Визначити та вивести: "
 
 print(f"\na. \n{df.groupby('Country').size().reset_index(name='Quantity of players by country')}")
 
-print(f"\nb. \n{df.groupby('Country')['Pts'].mean().reset_index(name='Mean rating (Pts.) by country')}")
+print(f"\nb. \n{df.groupby('Country')['Rank'].mean().reset_index(name='Mean rating by country')}")
 
 # =====================================================================================================
 
