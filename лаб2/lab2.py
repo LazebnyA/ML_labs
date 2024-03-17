@@ -1,6 +1,7 @@
 import math
 
 import pandas as pd
+import numpy as np
 
 import matplotlib.pyplot as plt
 
@@ -258,36 +259,60 @@ auc_roc_m2 = auc(fpr_m2, tpr_m2)
 print("Area Under Curve for Receiver Operation Curve model 1:", auc_roc_m1)
 print("Area Under Curve for Receiver Operation Curve model 2:", auc_roc_m2)
 
-
-
 # 3rd. task pt. b
+
+colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'magenta']
 
 plt.figure(figsize=(10, 6))
 ticks = get_x_values(0, 0.1)
 plt.xticks(ticks)
 plt.yticks(ticks)
 
-plt.plot(x_values, accuracy_m1, label='Accuracy', alpha=1)
+plt.plot(x_values, accuracy_m1, color=colors[0], label='Accuracy', alpha=1)
+plt.plot(x_values, precision_m1, color=colors[1], label='Precision')
+plt.plot(x_values, recall_m1, color=colors[2], label='Recall')
+plt.plot(x_values, f_scores_m1, color=colors[3], label='F-Score')
+plt.plot(x_values, mcc_m1, color=colors[4], label='MCC')
+plt.plot(x_values, balanced_acc_m1, color=colors[5], label='Balanced Accuracy', alpha=0.5)
+plt.plot(x_values, youden_j_m1, color=colors[6], label="Youden's J")
 
-plt.plot(x_values, precision_m1, label='Precision')
+max_accuracy_m1_value = max(accuracy_m1)
+max_accuracy_m1_threshold = x_values[accuracy_m1.index(max_accuracy_m1_value)]
+plt.scatter(max_accuracy_m1_threshold, max_accuracy_m1_value, marker='o', alpha=1, color=colors[0])
 
-plt.plot(x_values, recall_m1, label='Recall')
+max_precision_m1_value = max(precision_m1)
+max_precision_m1_threshold = x_values[precision_m1.index(max_precision_m1_value)]
+plt.scatter(max_precision_m1_threshold, max_precision_m1_value, marker='o', color=colors[1])
 
-plt.plot(x_values, f_scores_m1, label='F-Score')
+max_recall_m1_value = max(recall_m1)
+max_recall_m1_threshold = x_values[recall_m1.index(max_recall_m1_value)]
+plt.scatter(max_recall_m1_threshold, max_recall_m1_value, marker='o', color=colors[2])
 
-plt.plot(x_values, mcc_m1, label='MCC')
+max_f_scores_m1_value = max(f_scores_m1)
+max_f_scores_m1_threshold = x_values[f_scores_m1.index(max_f_scores_m1_value)]
+plt.scatter(max_f_scores_m1_threshold, max_f_scores_m1_value, marker='o', color=colors[3])
 
-plt.plot(x_values, balanced_acc_m1, label='Balanced Accuracy', alpha = 0.5)
+max_mcc_m1_value = max(mcc_m1)
+max_mcc_m1_threshold = x_values[mcc_m1.index(max_mcc_m1_value)]
+plt.scatter(max_mcc_m1_threshold, max_mcc_m1_value, marker='o', color=colors[4])
 
-plt.plot(x_values, youden_j_m1, label="Youden's J")
+max_balanced_acc_m1_value = max(balanced_acc_m1)
+max_balanced_acc_m1_threshold = x_values[balanced_acc_m1.index(max_balanced_acc_m1_value)]
+plt.scatter(max_balanced_acc_m1_threshold, max_balanced_acc_m1_value, marker='o', alpha=0.5, color=colors[5])
 
-plt.scatter(x_values[accuracy_m1.index(max(accuracy_m1))], max(accuracy_m1), marker='o', alpha = 1)
-plt.scatter(x_values[precision_m1.index(max(precision_m1))], max(precision_m1), marker='o')
-plt.scatter(x_values[recall_m1.index(max(recall_m1))], max(recall_m1), marker='o')
-plt.scatter(x_values[f_scores_m1.index(max(f_scores_m1))], max(f_scores_m1), marker='o')
-plt.scatter(x_values[mcc_m1.index(max(mcc_m1))], max(mcc_m1), marker='o')
-plt.scatter(x_values[balanced_acc_m1.index(max(balanced_acc_m1))], max(balanced_acc_m1), marker='o', alpha = 0.5)
-plt.scatter(x_values[youden_j_m1.index(max(youden_j_m1))], max(youden_j_m1), marker='o')
+max_youden_j_m1_value = max(youden_j_m1)
+max_youden_j_m1_threshold = x_values[youden_j_m1.index(max_youden_j_m1_value)]
+plt.scatter(max_youden_j_m1_threshold, max_youden_j_m1_value, marker='o', color=colors[6])
+
+m1_optimal_thrasholds = {
+    'Accuracy': max_accuracy_m1_threshold,
+    'Precision': max_precision_m1_threshold,
+    'Recall': max_recall_m1_threshold,
+    'F-Scores': max_f_scores_m1_threshold,
+    'MCC': max_mcc_m1_threshold,
+    'Balanced Accuracy': max_balanced_acc_m1_threshold,
+    'Youden`s J': max_youden_j_m1_threshold
+}
 
 plt.xlabel('Threshold')
 plt.ylabel('Metric Value')
@@ -305,27 +330,51 @@ ticks = get_x_values(0, 0.1)
 plt.xticks(ticks)
 plt.yticks(ticks)
 
-plt.plot(x_values, accuracy_m2, label='Accuracy', alpha = 1)
+plt.plot(x_values, accuracy_m2, color=colors[0], label='Accuracy', alpha=1)
+plt.plot(x_values, precision_m2, color=colors[1], label='Precision')
+plt.plot(x_values, recall_m2, color=colors[2], label='Recall')
+plt.plot(x_values, f_scores_m2, color=colors[3], label='F-Score')
+plt.plot(x_values, mcc_m2, color=colors[4], label='MCC')
+plt.plot(x_values, balanced_acc_m2, color=colors[5], label='Balanced Accuracy', alpha=0.5)
+plt.plot(x_values, youden_j_m2, color=colors[6], label="Youden's J")
 
-plt.plot(x_values, precision_m2, label='Precision')
+max_accuracy_m2_value = max(accuracy_m2)
+max_accuracy_m2_threshold = x_values[accuracy_m2.index(max_accuracy_m2_value)]
+plt.scatter(max_accuracy_m2_threshold, max_accuracy_m2_value, marker='o', alpha=1, color=colors[0])
 
-plt.plot(x_values, recall_m2, label='Recall')
+max_precision_m2_value = max(precision_m2)
+max_precision_m2_threshold = x_values[precision_m2.index(max_precision_m2_value)]
+plt.scatter(max_precision_m2_threshold, max_precision_m2_value, marker='o', color=colors[1])
 
-plt.plot(x_values, f_scores_m2, label='F-Score')
+max_recall_m2_value = max(recall_m2)
+max_recall_m2_threshold = x_values[recall_m2.index(max_recall_m2_value)]
+plt.scatter(max_recall_m2_threshold, max_recall_m2_value, marker='o', color=colors[2])
 
-plt.plot(x_values, mcc_m2, label='MCC')
+max_f_scores_m2_value = max(f_scores_m2)
+max_f_scores_m2_threshold = x_values[f_scores_m2.index(max_f_scores_m2_value)]
+plt.scatter(max_f_scores_m2_threshold, max_f_scores_m2_value, marker='o', color=colors[3])
 
-plt.plot(x_values, balanced_acc_m2, label='Balanced Accuracy', alpha = 0.5)
+max_mcc_m2_value = max(mcc_m2)
+max_mcc_m2_threshold = x_values[mcc_m2.index(max_mcc_m2_value)]
+plt.scatter(max_mcc_m2_threshold, max_mcc_m2_value, marker='o', color=colors[4])
 
-plt.plot(x_values, youden_j_m2, label="Youden's J")
+max_balanced_acc_m2_value = max(balanced_acc_m2)
+max_balanced_acc_m2_threshold = x_values[balanced_acc_m2.index(max_balanced_acc_m2_value)]
+plt.scatter(max_balanced_acc_m2_threshold, max_balanced_acc_m2_value, marker='o', alpha=0.5, color=colors[5])
 
-plt.scatter(x_values[accuracy_m2.index(max(accuracy_m2))], max(accuracy_m2), marker='o', alpha = 1)
-plt.scatter(x_values[precision_m2.index(max(precision_m2))], max(precision_m2), marker='o')
-plt.scatter(x_values[recall_m2.index(max(recall_m2))], max(recall_m2), marker='o')
-plt.scatter(x_values[f_scores_m2.index(max(f_scores_m2))], max(f_scores_m2), marker='o')
-plt.scatter(x_values[mcc_m2.index(max(mcc_m2))], max(mcc_m2), marker='o')
-plt.scatter(x_values[balanced_acc_m2.index(max(balanced_acc_m2))], max(balanced_acc_m2), marker='o', alpha = 0.5)
-plt.scatter(x_values[youden_j_m2.index(max(youden_j_m2))], max(youden_j_m2), marker='o')
+max_youden_j_m2_value = max(youden_j_m2)
+max_youden_j_m2_threshold = x_values[youden_j_m2.index(max_youden_j_m2_value)]
+plt.scatter(max_youden_j_m2_threshold, max_youden_j_m2_value, marker='o', color=colors[6])
+
+m2_optimal_thrasholds = {
+    'Accuracy': max_accuracy_m2_threshold,
+    'Precision': max_precision_m2_threshold,
+    'Recall': max_recall_m2_threshold,
+    'F-Scores': max_f_scores_m2_threshold,
+    'MCC': max_mcc_m2_threshold,
+    'Balanced Accuracy': max_balanced_acc_m2_threshold,
+    'Youden`s J': max_youden_j_m2_threshold
+}
 
 plt.xlabel('Threshold')
 plt.ylabel('Metric Value')
@@ -334,4 +383,108 @@ plt.legend()
 
 plt.grid(True)
 plt.savefig('metrics_plot_model2.png', dpi=300)
+plt.show()
+
+# 3rd. task pt. c
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+class_0_objects_m1 = df.loc[df['GT'] == 0, 'Model_1_1']
+class_1_objects_m1 = df.loc[df['GT'] == 1, 'Model_1_1']
+
+ax.hist(class_0_objects_m1, bins=20, color='blue', alpha=0.5, label='Class 0 Objects')
+
+ax.hist(class_1_objects_m1, bins=20, color='red', alpha=0.5, label='Class 1 Objects')
+
+ax.set_title('Object Counts vs Classifier Score for Model 1')
+ax.set_xlabel('Classifier Score')
+ax.set_ylabel('Object Count')
+
+for el, color in zip(m1_optimal_thrasholds.items(), colors):
+    ax.axvline(x=el[1], linestyle='--', label=el[0], color=color)
+
+ax.legend()
+plt.savefig('count_objects_by_score_m1.png', dpi=300)
+plt.show()
+
+############################
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+class_0_objects_m2 = df.loc[df['GT'] == 0, 'Model_2_1']
+class_1_objects_m2 = df.loc[df['GT'] == 1, 'Model_2_1']
+
+ax.hist(class_0_objects_m2, bins=20, color='blue', alpha=0.5, label='Class 0 Objects')
+
+ax.hist(class_1_objects_m2, bins=20, color='red', alpha=0.5, label='Class 1 Objects')
+
+ax.set_title('Object Counts vs Classifier Score for Model 2')
+ax.set_xlabel('Classifier Score')
+ax.set_ylabel('Object Count')
+
+for el, color in zip(m2_optimal_thrasholds.items(), colors):
+    ax.axvline(x=el[1], linestyle='--', label=el[0], color=color)
+
+ax.legend()
+plt.savefig('count_objects_by_score_m2.png', dpi=300)
+plt.show()
+
+# 3rd. task pt. d
+
+# RV
+
+plt.plot(recall_for_curve_m1, precision_for_curve_m1, label='Model_1_1')
+# ideal_points = np.ones(len(recall_for_curve_m1), dtype=int)
+# optimal_idx_m1 = np.argmin(math.sqrt((recall_for_curve_m1 - ideal_points) ** 2 + (precision_for_curve_m1 - ideal_points) ** 2))
+optimal_idx_m1 = np.argmax(precision_for_curve_m1 + recall_for_curve_m1)
+optimal_threshold_m1 = thresholds_m1[optimal_idx_m1]
+plt.scatter(recall_for_curve_m1[optimal_idx_m1],
+            precision_for_curve_m1[optimal_idx_m1])
+plt.annotate(round(optimal_threshold_m1, 2),
+             (recall_for_curve_m1[optimal_idx_m1],
+              precision_for_curve_m1[optimal_idx_m1]))
+
+plt.plot(recall_for_curve_m2, precision_for_curve_m2, label='Model_2_1')
+optimal_idx_m2 = np.argmax(precision_for_curve_m2 + recall_for_curve_m2)
+optimal_threshold_m2 = thresholds_m2[optimal_idx_m2]
+plt.scatter(recall_for_curve_m2[optimal_idx_m2],
+            precision_for_curve_m2[optimal_idx_m2])
+plt.annotate(round(optimal_threshold_m2, 2),
+             (recall_for_curve_m2[optimal_idx_m2],
+              precision_for_curve_m2[optimal_idx_m2]))
+
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.title('Precision-Recall Curve')
+plt.legend()
+plt.grid(True)
+plt.savefig('PR_curves.png', dpi=300)
+plt.show()
+
+# ROC
+
+plt.plot(fpr_m1, tpr_m1, label='Model_1_1')
+optimal_idx_m1 = np.argmax(tpr_m1 - fpr_m1)
+optimal_threshold_m1 = thresholds_m1[optimal_idx_m1]
+plt.scatter(fpr_m1[optimal_idx_m1],
+            tpr_m1[optimal_idx_m1])
+plt.annotate(round(optimal_threshold_m1, 2),
+             (fpr_m1[optimal_idx_m1],
+              tpr_m1[optimal_idx_m1]))
+
+plt.plot(fpr_m2, tpr_m2, label='Model_2_1')
+optimal_idx_m2 = np.argmax(tpr_m2 - fpr_m2)
+optimal_threshold_m2 = thresholds_m2[optimal_idx_m2]
+plt.scatter(fpr_m2[optimal_idx_m2],
+            tpr_m2[optimal_idx_m2])
+plt.annotate(round(optimal_threshold_m2, 2),
+             (fpr_m2[optimal_idx_m2],
+              tpr_m2[optimal_idx_m2]))
+
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC-curve')
+plt.legend()
+plt.grid(True)
+plt.savefig('ROC-curves.png', dpi=300)
 plt.show()
