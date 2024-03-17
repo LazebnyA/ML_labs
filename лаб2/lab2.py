@@ -232,11 +232,11 @@ print(f"Youden's J Statistics model 2: {youden_j_m2}")
 
 # Area under curve for Precision-Recall Curve
 
-precision_for_curve_m1, recall_for_curve_m1, thresholds_m1 = precision_recall_curve(df['GT'], df['Model_1_1'])
-precision_for_curve_m2, recall_for_curve_m2, thresholds_m2 = precision_recall_curve(df['GT'], df['Model_2_1'])
+precision_for_curve_m1, recall_for_curve_m1, thresholds_pr_m1 = precision_recall_curve(df['GT'], df['Model_1_1'])
+precision_for_curve_m2, recall_for_curve_m2, thresholds_pr_m2 = precision_recall_curve(df['GT'], df['Model_2_1'])
 
-print(len(thresholds_m1))
-print(len(thresholds_m2))
+print(len(thresholds_pr_m1))
+print(len(thresholds_pr_m2))
 
 auc_pr_m1 = auc(recall_for_curve_m1, precision_for_curve_m1)
 auc_pr_m2 = auc(recall_for_curve_m2, precision_for_curve_m2)
@@ -247,11 +247,11 @@ print("Area Under Curve for Precision-Recall Curve model 2:", auc_pr_m2)
 # Area under curve for Receiver Operation Curve
 
 
-fpr_m1, tpr_m1, thresholds_m1 = roc_curve(df['GT'], df['Model_1_1'])
-fpr_m2, tpr_m2, thresholds_m2 = roc_curve(df['GT'], df['Model_2_1'])
+fpr_m1, tpr_m1, thresholds_roc_m1 = roc_curve(df['GT'], df['Model_1_1'])
+fpr_m2, tpr_m2, thresholds_roc_m2 = roc_curve(df['GT'], df['Model_2_1'])
 
-print(len(thresholds_m1))
-print(len(thresholds_m2))
+print(len(thresholds_roc_m1))
+print(len(thresholds_roc_m2))
 
 auc_roc_m1 = auc(fpr_m1, tpr_m1)
 auc_roc_m2 = auc(fpr_m2, tpr_m2)
@@ -433,20 +433,30 @@ plt.show()
 
 # RV
 
+print(len(recall_for_curve_m1))
+print(len(precision_for_curve_m1))
+print(len(thresholds_pr_m1))
+
+# Построение графиков
 plt.plot(recall_for_curve_m1, precision_for_curve_m1, label='Model_1_1')
-# ideal_points = np.ones(len(recall_for_curve_m1), dtype=int)
-# optimal_idx_m1 = np.argmin(math.sqrt((recall_for_curve_m1 - ideal_points) ** 2 + (precision_for_curve_m1 - ideal_points) ** 2))
-optimal_idx_m1 = np.argmax(precision_for_curve_m1 + recall_for_curve_m1)
-optimal_threshold_m1 = thresholds_m1[optimal_idx_m1]
+ideal_points_m1 = np.ones(len(recall_for_curve_m1))  # Создаем массив единиц такой же длины, как и recall_for_curve_m1
+optimal_idx_m1 = np.argmin(np.sqrt((recall_for_curve_m1 - ideal_points_m1) ** 2 + (precision_for_curve_m1 - ideal_points_m1) ** 2))
+optimal_threshold_m1 = thresholds_pr_m1[optimal_idx_m1]
 plt.scatter(recall_for_curve_m1[optimal_idx_m1],
             precision_for_curve_m1[optimal_idx_m1])
 plt.annotate(round(optimal_threshold_m1, 2),
              (recall_for_curve_m1[optimal_idx_m1],
               precision_for_curve_m1[optimal_idx_m1]))
 
+
+print(len(recall_for_curve_m2))
+print(len(precision_for_curve_m2))
+print(len(thresholds_pr_m2))
+
 plt.plot(recall_for_curve_m2, precision_for_curve_m2, label='Model_2_1')
-optimal_idx_m2 = np.argmax(precision_for_curve_m2 + recall_for_curve_m2)
-optimal_threshold_m2 = thresholds_m2[optimal_idx_m2]
+ideal_points_m2 = np.ones(len(recall_for_curve_m2))  # Создаем массив единиц такой же длины, как и recall_for_curve_m2
+optimal_idx_m2 = np.argmin(np.sqrt((recall_for_curve_m2 - ideal_points_m2) ** 2 + (precision_for_curve_m2 - ideal_points_m2) ** 2))
+optimal_threshold_m2 = thresholds_pr_m2[optimal_idx_m2]
 plt.scatter(recall_for_curve_m2[optimal_idx_m2],
             precision_for_curve_m2[optimal_idx_m2])
 plt.annotate(round(optimal_threshold_m2, 2),
@@ -455,17 +465,16 @@ plt.annotate(round(optimal_threshold_m2, 2),
 
 plt.xlabel('Recall')
 plt.ylabel('Precision')
-plt.title('Precision-Recall Curve')
 plt.legend()
-plt.grid(True)
-plt.savefig('PR_curves.png', dpi=300)
+plt.savefig('RV-curves.png', dpi=300)
 plt.show()
+
 
 # ROC
 
 plt.plot(fpr_m1, tpr_m1, label='Model_1_1')
 optimal_idx_m1 = np.argmax(tpr_m1 - fpr_m1)
-optimal_threshold_m1 = thresholds_m1[optimal_idx_m1]
+optimal_threshold_m1 = thresholds_roc_m1[optimal_idx_m1]
 plt.scatter(fpr_m1[optimal_idx_m1],
             tpr_m1[optimal_idx_m1])
 plt.annotate(round(optimal_threshold_m1, 2),
@@ -474,7 +483,7 @@ plt.annotate(round(optimal_threshold_m1, 2),
 
 plt.plot(fpr_m2, tpr_m2, label='Model_2_1')
 optimal_idx_m2 = np.argmax(tpr_m2 - fpr_m2)
-optimal_threshold_m2 = thresholds_m2[optimal_idx_m2]
+optimal_threshold_m2 = thresholds_roc_m2[optimal_idx_m2]
 plt.scatter(fpr_m2[optimal_idx_m2],
             tpr_m2[optimal_idx_m2])
 plt.annotate(round(optimal_threshold_m2, 2),
