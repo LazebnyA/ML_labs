@@ -2,6 +2,8 @@ import math
 
 import pandas as pd
 
+import matplotlib.pyplot as plt
+
 from sklearn.metrics import precision_recall_curve, auc, roc_curve
 
 # 1st. task
@@ -20,6 +22,20 @@ print("Оскільки кількість об'єктів однакова дл
 # =====================================================================================================
 
 # 3rd. task
+
+def get_x_values(start, step):
+    x_values = []
+
+    while start <= 1.0:
+        x_values.append(start)
+        start += step
+
+    x_values = [round(el, 2) for el in x_values]
+
+    if x_values[-1] != 1.0:
+        x_values.append(1.0)
+
+    return x_values
 
 def get_predictions(actual, probabilities, threshold_val):
     predictions = []
@@ -88,7 +104,10 @@ def get_MCC(gt, predictions):
                             (confusion_map['TN'] + confusion_map['FN'])
                             )
 
-    mcc = numerator / denominator
+    if denominator == 0:
+        mcc = 0
+    else:
+        mcc = numerator / denominator
 
     return mcc
 
@@ -119,18 +138,15 @@ def get_youden_j(gt, predictions):
 
 
 step = 0.05
-start_threshold = 0.1
+start_threshold = 0
 
-x_values = []
-
-while start_threshold <= 1.0:
-    x_values.append(start_threshold)
-    start_threshold += step
-
-x_values = [round(el, 2) for el in x_values]
+x_values = get_x_values(start_threshold, step)
 print(x_values)
 
-# Model 1
+# 3rd. task pt. a
+#
+# predictions_df_m1 = get_predictions(df['GT'], df['Model_1_1'], x_values)
+
 # Accuracy
 accuracy_m1 = list(map(lambda x: get_accuracy(df['GT'],
                                               get_predictions(df['GT'], df['Model_1_1'], x)),
@@ -242,3 +258,97 @@ auc_roc_m2 = auc(fpr_m2, tpr_m2)
 
 print("Area Under Curve for Receiver Operation Curve model 1:", auc_roc_m1)
 print("Area Under Curve for Receiver Operation Curve model 2:", auc_roc_m2)
+
+
+
+# 3rd. task pt. b
+
+plt.figure(figsize=(10, 6))
+ticks = get_x_values(0, 0.1)
+plt.xticks(ticks)
+plt.yticks(ticks)
+
+# Построение графика для accuracy
+plt.plot(x_values, accuracy_m1, label='Accuracy', alpha = 1)
+
+# Построение графика для precision
+plt.plot(x_values, precision_m1, label='Precision')
+
+# Построение графика для recall
+plt.plot(x_values, recall_m1, label='Recall')
+
+# Построение графика для F-Scores
+plt.plot(x_values, f_scores_m1, label='F-Score')
+
+# Построение графика для Matthew Correlation Coefficient
+plt.plot(x_values, mcc_m1, label='MCC')
+
+# Построение графика для Balanced Accuracy
+plt.plot(x_values, balanced_acc_m1, label='Balanced Accuracy', alpha = 0.5)
+
+# Построение графика для Youden's J
+plt.plot(x_values, youden_j_m1, label="Youden's J")
+
+# Отмечаем максимальные значения для каждой метрики
+plt.scatter(x_values[accuracy_m1.index(max(accuracy_m1))], max(accuracy_m1), marker='o', alpha = 1)
+plt.scatter(x_values[precision_m1.index(max(precision_m1))], max(precision_m1), marker='o')
+plt.scatter(x_values[recall_m1.index(max(recall_m1))], max(recall_m1), marker='o')
+plt.scatter(x_values[f_scores_m1.index(max(f_scores_m1))], max(f_scores_m1), marker='o')
+plt.scatter(x_values[mcc_m1.index(max(mcc_m1))], max(mcc_m1), marker='o')
+plt.scatter(x_values[balanced_acc_m1.index(max(balanced_acc_m1))], max(balanced_acc_m1), marker='o', alpha = 0.5)
+plt.scatter(x_values[youden_j_m1.index(max(youden_j_m1))], max(youden_j_m1), marker='o')
+
+plt.xlabel('Threshold')
+plt.ylabel('Metric Value')
+plt.title('Metrics vs Threshold for Model 1')
+plt.legend()
+
+plt.grid(True)
+plt.savefig('metrics_plot_model1.png', dpi=300)
+plt.show()
+
+####################################
+
+plt.figure(figsize=(10, 6))
+ticks = get_x_values(0, 0.1)
+plt.xticks(ticks)
+plt.yticks(ticks)
+
+# Построение графика для accuracy
+plt.plot(x_values, accuracy_m2, label='Accuracy', alpha = 1)
+
+# Построение графика для precision
+plt.plot(x_values, precision_m2, label='Precision')
+
+# Построение графика для recall
+plt.plot(x_values, recall_m2, label='Recall')
+
+# Построение графика для F-Scores
+plt.plot(x_values, f_scores_m2, label='F-Score')
+
+# Построение графика для Matthew Correlation Coefficient
+plt.plot(x_values, mcc_m2, label='MCC')
+
+# Построение графика для Balanced Accuracy
+plt.plot(x_values, balanced_acc_m2, label='Balanced Accuracy', alpha = 0.5)
+
+# Построение графика для Youden's J
+plt.plot(x_values, youden_j_m2, label="Youden's J")
+
+# Отмечаем максимальные значения для каждой метрики
+plt.scatter(x_values[accuracy_m2.index(max(accuracy_m2))], max(accuracy_m2), marker='o')
+plt.scatter(x_values[precision_m2.index(max(precision_m2))], max(precision_m2), marker='o')
+plt.scatter(x_values[recall_m2.index(max(recall_m2))], max(recall_m2), marker='o')
+plt.scatter(x_values[f_scores_m2.index(max(f_scores_m2))], max(f_scores_m2), marker='o')
+plt.scatter(x_values[mcc_m2.index(max(mcc_m2))], max(mcc_m2), marker='o')
+plt.scatter(x_values[balanced_acc_m2.index(max(balanced_acc_m2))], max(balanced_acc_m2), marker='o')
+plt.scatter(x_values[youden_j_m2.index(max(youden_j_m2))], max(youden_j_m2), marker='o')
+
+plt.xlabel('Threshold')
+plt.ylabel('Metric Value')
+plt.title('Metrics vs Threshold for Model 2')
+plt.legend()
+
+plt.grid(True)
+plt.savefig('metrics_plot_model2.png', dpi=300)
+plt.show()
