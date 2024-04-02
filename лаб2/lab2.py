@@ -471,9 +471,10 @@ plt.show()
 
 
 # ROC
-
 plt.plot(fpr_m1, tpr_m1, label='Model_1_1')
-optimal_idx_m1 = np.argmax(tpr_m1 - fpr_m1)
+ideal_x_m1 = np.zeros(len(fpr_m1))
+ideal_y_m1 = np.ones(len(fpr_m1))
+optimal_idx_m1 = np.argmin(np.sqrt((fpr_m1 - ideal_x_m1) ** 2 + (tpr_m1 - ideal_y_m1) ** 2))
 optimal_threshold_m1 = thresholds_roc_m1[optimal_idx_m1]
 plt.scatter(fpr_m1[optimal_idx_m1],
             tpr_m1[optimal_idx_m1])
@@ -481,14 +482,18 @@ plt.annotate(round(optimal_threshold_m1, 2),
              (fpr_m1[optimal_idx_m1],
               tpr_m1[optimal_idx_m1]))
 
-plt.plot(fpr_m2, tpr_m2, label='Model_2_1')
-optimal_idx_m2 = np.argmax(tpr_m2 - fpr_m2)
+
+plt.plot(fpr_m2, tpr_m2, label='Model_1_1')
+ideal_x_m2 = np.zeros(len(fpr_m2))
+ideal_y_m2 = np.ones(len(fpr_m2))
+optimal_idx_m2 = np.argmin(np.sqrt((fpr_m2 - ideal_x_m2) ** 2 + (tpr_m2 - ideal_y_m2) ** 2))
 optimal_threshold_m2 = thresholds_roc_m2[optimal_idx_m2]
 plt.scatter(fpr_m2[optimal_idx_m2],
             tpr_m2[optimal_idx_m2])
 plt.annotate(round(optimal_threshold_m2, 2),
              (fpr_m2[optimal_idx_m2],
               tpr_m2[optimal_idx_m2]))
+
 
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
