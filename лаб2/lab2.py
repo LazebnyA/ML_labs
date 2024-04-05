@@ -437,7 +437,7 @@ print(len(recall_for_curve_m1))
 print(len(precision_for_curve_m1))
 print(len(thresholds_pr_m1))
 
-# Построение графиков
+# Building graphs
 plt.plot(recall_for_curve_m1, precision_for_curve_m1, label='Model_1_1')
 ideal_points_m1 = np.ones(len(recall_for_curve_m1))  # Создаем массив единиц такой же длины, как и recall_for_curve_m1
 optimal_idx_m1 = np.argmin(np.sqrt((recall_for_curve_m1 - ideal_points_m1) ** 2 + (precision_for_curve_m1 - ideal_points_m1) ** 2))
