@@ -89,11 +89,27 @@ def get_results(clf, criterion_name):
     axes[1].set_xlabel('Predicted labels')
     axes[1].set_ylabel('True labels')
 
-    misclassified_examples = X_test[y_test != y_pred_test]
-
     plt.tight_layout()
+
+    # plt.savefig(f'conf_matrix_train_test_{criterion_name}.png')
+
     plt.show()
 
+
+def get_feature_importances(clf, criterion_name):
+    feature_importances = clf.feature_importances_
+
+    feature_names = X.columns
+
+    indices = np.argsort(feature_importances)
+
+    plt.figure(figsize=(10, 6))
+    plt.title(f"Feature Importances with criterion: {criterion_name}")
+    plt.bar(range(X.shape[1]), feature_importances[indices], color="b", align="center")
+    plt.xticks(range(X.shape[1]), [feature_names[i] for i in indices], rotation=45)
+    plt.xlabel("Feature")
+    plt.ylabel("Importance")
+    plt.show()
 
 # 1st. task
 df = pd.read_csv('dataset_2.txt', header=None)
@@ -174,9 +190,9 @@ for i, max_depth in enumerate(max_depth_values):
         clf = DecisionTreeClassifier(max_depth=max_depth, min_samples_leaf=min_samples_leaf)
         clf.fit(X_train, y_train)
 
-        #visualize
-        graph = visualize_decision_tree(clf, to_return=True)
-        graph.render(f"metrics_for_different_tree_params/vis_trees/depth_{max_depth}/decision_tree_depth_{max_depth}_{min_samples_leaf}", format="png", view=False)
+        # visualize
+        # graph = visualize_decision_tree(clf, to_return=True)
+        # graph.render(f"metrics_for_different_tree_params/vis_trees/depth_{max_depth}/decision_tree_depth_{max_depth}_{min_samples_leaf}", format="png", view=False)
 
         # Predict target values
         y_pred = clf.predict(X_test)
@@ -227,18 +243,24 @@ for max_depth in max_depth_values:
     plt.plot(min_samples_leaf_values, metrics_for_min_samples_leaf[:, 5], label='Balanced Accuracy')
     plt.plot(min_samples_leaf_values, metrics_for_min_samples_leaf[:, 6], label="Youden's J stats")
 
-    plt.savefig(f'metrics_for_different_tree_params/graphs/max_depth_{max_depth}.png')
-
     plt.legend()
+
+    # plt.savefig(f'metrics_for_different_tree_params/graphs/max_depth_{max_depth}.png')
+
     plt.show()
 
-    for i, matrix in enumerate(lst_of_conf_matrix):
-        plt.figure(figsize=(6, 6))
-        plt.title(f"Confusion matrix for max_depth = {max_depth}, min_leaf_samples = {i+1}")
+    # for i, matrix in enumerate(lst_of_conf_matrix):
+    #     plt.figure(figsize=(6, 6))
+    #     plt.title(f"Confusion matrix for max_depth = {max_depth}, min_leaf_samples = {i+1}")
+    #
+    #     sns.heatmap(np.array(matrix), annot=True, cmap='Blues', fmt='g')
+    #     plt.xlabel('Predicted labels')
+    #     plt.ylabel('True labels')
+    #
+    #     plt.savefig(f'metrics_for_different_tree_params/conf_matrices/max_depth_{max_depth}_{i+1}.png')
+    #     plt.close()
 
-        sns.heatmap(np.array(matrix), annot=True, cmap='Blues', fmt='g')
-        plt.xlabel('Predicted labels')
-        plt.ylabel('True labels')
+# 9th. task
 
-        plt.savefig(f'metrics_for_different_tree_params/conf_matrices/max_depth_{max_depth}_{i+1}.png')
-        plt.close()
+get_feature_importances(clf_gini, "gini")
+get_feature_importances(clf_entropy, "entropy")
