@@ -7,22 +7,8 @@ import matplotlib.pyplot as plt
 
 from sklearn.metrics import precision_recall_curve, auc, roc_curve
 
-# 1st. task
-df = pd.read_csv('KM-12-2.csv')
-# print(df.to_string())
 
-# =====================================================================================================
-
-# 2nd. task
-gt_counts = df['GT'].value_counts()
-
-print(f"Розподіл об'єктів відповідних класів: {gt_counts.to_string()}")
-print("Оскільки кількість об'єктів однакова для кожного класу — набір даних збалансований.")
-
-
-# =====================================================================================================
-
-# 3rd. task
+# ---------------------- func block ---------------------- #
 
 def get_x_values(start, step):
     x_values = []
@@ -143,29 +129,64 @@ def get_youden_j(predictions, threshold):
     return youden_j
 
 
+# ---------------------- func block ---------------------- #
+
+# =====================================================================================================
+
+
+# 1st. task
+df = pd.read_csv('KM-12-2.csv')
+print(f'''
+1. Відкрити та зчитати дані з наданого файлу. Файл містить п’ять стовпчиків: \n{df.head()}\n
+a. Фактичне значення цільової характеристики. \n{df["GT"].head()}\n
+b. Результат передбачення моделі No1 у вигляді ймовірності
+приналежності об’єкту до класу 0. \n{df["Model_1_0"].head()}\n
+c. Результат передбачення моделі No1 у вигляді ймовірності
+приналежності об’єкту до класу 1. \n{df["Model_1_1"].head()}\n
+d. Результат передбачення моделі No2 у вигляді ймовірності
+приналежності об’єкту до класу 0. \n{df["Model_2_0"].head()}\n
+e. Результат передбачення моделі No2 у вигляді ймовірності
+приналежності об’єкту до класу 1. \n{df["Model_2_1"].head()}\n
+''')
+
+# =====================================================================================================
+
+# 2nd. task
+print('''
+2. Визначити збалансованість набору даних. Вивести кількість об’єктів
+кожного класу.
+''')
+
+gt_counts = df['GT'].value_counts()
+
+print(f"Розподіл об'єктів відповідних класів: {gt_counts.to_string()}")
+print("Оскільки кількість об'єктів однакова для кожного класу — набір даних збалансований.\n")
+
+# =====================================================================================================
+
+# 3rd. task
+print("3. Для зчитаного набору даних виконати наступні дії:")
+
 step = 0.05
 start_threshold = 0
 
 x_values = get_x_values(start_threshold, step)
-print(x_values)
 
 # 3rd. task pt. a
-
 predictions_df_m1 = get_predictions(df['GT'], df['Model_1_1'], x_values)
 predictions_df_m2 = get_predictions(df['GT'], df['Model_2_1'], x_values)
 
-# print(predictions_df_m1.to_string())
-
 # Accuracy
-
 accuracy_m1 = list(map(lambda x: get_accuracy(predictions_df_m1, x),
                        map(str, x_values)))
 
 accuracy_m2 = list(map(lambda x: get_accuracy(predictions_df_m2, x),
                        map(str, x_values)))
 
+print("a. Обчислити всі метрики.\n")
+
 print(f"Accuracy model 1: {accuracy_m1}")
-print(f"Accuracy model 2: {accuracy_m2}")
+print(f"Accuracy model 2: {accuracy_m2}\n")
 
 # Precision
 
@@ -177,7 +198,7 @@ precision_m2 = list(map(lambda x: get_precision(predictions_df_m2, x),
                         map(str, x_values)))
 
 print(f"Precision model 1: {precision_m1}")
-print(f"Precision model 2: {precision_m2}")
+print(f"Precision model 2: {precision_m2}\n")
 
 # Recall
 recall_m1 = list(map(lambda x: get_recall_1(predictions_df_m1, x),
@@ -187,7 +208,7 @@ recall_m2 = list(map(lambda x: get_recall_1(predictions_df_m2, x),
                      map(str, x_values)))
 
 print(f"Recall model 1: {recall_m1}")
-print(f"Recall model 2: {recall_m2}")
+print(f"Recall model 2: {recall_m2}\n")
 
 # F-Scores
 f_scores_m1 = list(map(lambda x, y: get_f_scores(x, y),
@@ -197,7 +218,7 @@ f_scores_m2 = list(map(lambda x, y: get_f_scores(x, y),
                        precision_m2, recall_m2))
 
 print(f"F-Scores model 1: {f_scores_m1}")
-print(f"F-Scores model 2: {f_scores_m2}")
+print(f"F-Scores model 2: {f_scores_m2}\n")
 
 # Matthew Correlation Coefficient
 mcc_m1 = list(map(lambda x: get_MCC(predictions_df_m1, x),
@@ -207,7 +228,7 @@ mcc_m2 = list(map(lambda x: get_MCC(predictions_df_m2, x),
                   map(str, x_values)))
 
 print(f"Matthew Correlation Coefficient model 1: {mcc_m1}")
-print(f"Matthew Correlation Coefficient model 2: {mcc_m2}")
+print(f"Matthew Correlation Coefficient model 2: {mcc_m2}\n")
 
 # Balanced Accuracy
 balanced_acc_m1 = list(map(lambda x: get_balanced_acc(predictions_df_m1, x),
@@ -217,10 +238,9 @@ balanced_acc_m2 = list(map(lambda x: get_balanced_acc(predictions_df_m2, x),
                            map(str, x_values)))
 
 print(f"Balanced accuracy model 1: {balanced_acc_m1}")
-print(f"Balanced accuracy model 2: {balanced_acc_m2}")
+print(f"Balanced accuracy model 2: {balanced_acc_m2}\n")
 
 # Youden J
-
 youden_j_m1 = list(map(lambda x: get_youden_j(predictions_df_m1, x),
                        map(str, x_values)))
 
@@ -228,38 +248,32 @@ youden_j_m2 = list(map(lambda x: get_youden_j(predictions_df_m2, x),
                        map(str, x_values)))
 
 print(f"Youden's J Statistics model 1: {youden_j_m1}")
-print(f"Youden's J Statistics model 2: {youden_j_m2}")
+print(f"Youden's J Statistics model 2: {youden_j_m2}\n")
 
 # Area under curve for Precision-Recall Curve
-
 precision_for_curve_m1, recall_for_curve_m1, thresholds_pr_m1 = precision_recall_curve(df['GT'], df['Model_1_1'])
 precision_for_curve_m2, recall_for_curve_m2, thresholds_pr_m2 = precision_recall_curve(df['GT'], df['Model_2_1'])
-
-print(len(thresholds_pr_m1))
-print(len(thresholds_pr_m2))
 
 auc_pr_m1 = auc(recall_for_curve_m1, precision_for_curve_m1)
 auc_pr_m2 = auc(recall_for_curve_m2, precision_for_curve_m2)
 
 print("Area Under Curve for Precision-Recall Curve model 1:", auc_pr_m1)
 print("Area Under Curve for Precision-Recall Curve model 2:", auc_pr_m2)
+print()
 
 # Area under curve for Receiver Operation Curve
-
-
 fpr_m1, tpr_m1, thresholds_roc_m1 = roc_curve(df['GT'], df['Model_1_1'])
 fpr_m2, tpr_m2, thresholds_roc_m2 = roc_curve(df['GT'], df['Model_2_1'])
-
-print(len(thresholds_roc_m1))
-print(len(thresholds_roc_m2))
 
 auc_roc_m1 = auc(fpr_m1, tpr_m1)
 auc_roc_m2 = auc(fpr_m2, tpr_m2)
 
 print("Area Under Curve for Receiver Operation Curve model 1:", auc_roc_m1)
 print("Area Under Curve for Receiver Operation Curve model 2:", auc_roc_m2)
+print()
 
 # 3rd. task pt. b
+print("\nb. Графіки. Metrics vs Threshold for Model 1/2.")
 
 colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'magenta']
 
@@ -304,7 +318,7 @@ max_youden_j_m1_value = max(youden_j_m1)
 max_youden_j_m1_threshold = x_values[youden_j_m1.index(max_youden_j_m1_value)]
 plt.scatter(max_youden_j_m1_threshold, max_youden_j_m1_value, marker='o', color=colors[6])
 
-m1_optimal_thrasholds = {
+m1_optimal_thresholds = {
     'Accuracy': max_accuracy_m1_threshold,
     'Precision': max_precision_m1_threshold,
     'Recall': max_recall_m1_threshold,
@@ -386,6 +400,7 @@ plt.savefig('metrics_plot_model2.png', dpi=300)
 plt.show()
 
 # 3rd. task pt. c
+print("\nc. Графіки. Object Counts vs Classifier Score for Model 1/2.")
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -400,7 +415,7 @@ ax.set_title('Object Counts vs Classifier Score for Model 1')
 ax.set_xlabel('Classifier Score')
 ax.set_ylabel('Object Count')
 
-for el, color in zip(m1_optimal_thrasholds.items(), colors):
+for el, color in zip(m1_optimal_thresholds.items(), colors):
     ax.axvline(x=el[1], linestyle='--', label=el[0], color=color)
 
 ax.legend()
@@ -431,16 +446,17 @@ plt.show()
 
 # 3rd. task pt. d
 
-# RV
+print('''
+d. Збудувати для кожного класифікатору PR-криву та ROC-криву,
+показавши графічно на них значення оптимального порогу. (PR/ROC curve)''')
 
-print(len(recall_for_curve_m1))
-print(len(precision_for_curve_m1))
-print(len(thresholds_pr_m1))
+# RV
 
 # Building graphs
 plt.plot(recall_for_curve_m1, precision_for_curve_m1, label='Model_1_1')
-ideal_points_m1 = np.ones(len(recall_for_curve_m1))  # Создаем массив единиц такой же длины, как и recall_for_curve_m1
-optimal_idx_m1 = np.argmin(np.sqrt((recall_for_curve_m1 - ideal_points_m1) ** 2 + (precision_for_curve_m1 - ideal_points_m1) ** 2))
+ideal_points_m1 = np.ones(len(recall_for_curve_m1))
+optimal_idx_m1 = np.argmin(
+    np.sqrt((recall_for_curve_m1 - ideal_points_m1) ** 2 + (precision_for_curve_m1 - ideal_points_m1) ** 2))
 optimal_threshold_m1 = thresholds_pr_m1[optimal_idx_m1]
 plt.scatter(recall_for_curve_m1[optimal_idx_m1],
             precision_for_curve_m1[optimal_idx_m1])
@@ -448,14 +464,10 @@ plt.annotate(round(optimal_threshold_m1, 2),
              (recall_for_curve_m1[optimal_idx_m1],
               precision_for_curve_m1[optimal_idx_m1]))
 
-
-print(len(recall_for_curve_m2))
-print(len(precision_for_curve_m2))
-print(len(thresholds_pr_m2))
-
 plt.plot(recall_for_curve_m2, precision_for_curve_m2, label='Model_2_1')
 ideal_points_m2 = np.ones(len(recall_for_curve_m2))  # Создаем массив единиц такой же длины, как и recall_for_curve_m2
-optimal_idx_m2 = np.argmin(np.sqrt((recall_for_curve_m2 - ideal_points_m2) ** 2 + (precision_for_curve_m2 - ideal_points_m2) ** 2))
+optimal_idx_m2 = np.argmin(
+    np.sqrt((recall_for_curve_m2 - ideal_points_m2) ** 2 + (precision_for_curve_m2 - ideal_points_m2) ** 2))
 optimal_threshold_m2 = thresholds_pr_m2[optimal_idx_m2]
 plt.scatter(recall_for_curve_m2[optimal_idx_m2],
             precision_for_curve_m2[optimal_idx_m2])
@@ -463,12 +475,12 @@ plt.annotate(round(optimal_threshold_m2, 2),
              (recall_for_curve_m2[optimal_idx_m2],
               precision_for_curve_m2[optimal_idx_m2]))
 
+plt.title('Precision-Recall curve')
 plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.legend()
-plt.savefig('RV-curves.png', dpi=300)
+plt.savefig('PR-curves.png', dpi=300)
 plt.show()
-
 
 # ROC
 plt.plot(fpr_m1, tpr_m1, label='Model_1_1')
@@ -482,7 +494,6 @@ plt.annotate(round(optimal_threshold_m1, 2),
              (fpr_m1[optimal_idx_m1],
               tpr_m1[optimal_idx_m1]))
 
-
 plt.plot(fpr_m2, tpr_m2, label='Model_1_1')
 ideal_x_m2 = np.zeros(len(fpr_m2))
 ideal_y_m2 = np.ones(len(fpr_m2))
@@ -494,7 +505,6 @@ plt.annotate(round(optimal_threshold_m2, 2),
              (fpr_m2[optimal_idx_m2],
               tpr_m2[optimal_idx_m2]))
 
-
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('ROC-curve')
@@ -502,3 +512,16 @@ plt.legend()
 plt.grid(True)
 plt.savefig('ROC-curves.png', dpi=300)
 plt.show()
+
+
+# Task 4
+print("\n4. Перша модель є кращою, це можна прослідкувати на графіків пунктів 3с. і 3d.\n")
+
+# Task 5
+print('''
+5. Створити новий набір даних, прибравши з початкового набору (50 +
+5К)% об’єктів класу 1, вибраних випадковим чином. Параметр К
+представляє собою залишок від ділення дня народження студента на дев’ять
+та має визначатися в програмі на основі дати народження студента, яка
+задана в програмі у вигляді текстової змінної формату ‘DD-MM’.
+''')
