@@ -174,7 +174,6 @@ heatmap_train = sns.heatmap(metrics_k_1_train["Confusion Matrix"], annot=True, f
                             yticklabels=class_labels)
 
 plt.show()
-# Для тестової вибірки є помилки.
 
 # ------------- Візуалізація метрик --------------- #
 
