@@ -167,20 +167,20 @@ plt.bar(list(metrics_k_1_test.keys())[:-1], list(metrics_k_1_test.values())[:-1]
 
 plt.show()
 
-# --------------- Візуалізація Confusion Matrix -------------------- #
-
-plt.figure(figsize=(10, 8))
-heatmap_train = sns.heatmap(metrics_k_1_train["Confusion Matrix"], annot=True, fmt='d', cmap='Blues', xticklabels=class_labels,
-                            yticklabels=class_labels)
-
-plt.show()
-
-# ------------- Візуалізація метрик --------------- #
-
-plt.figure(figsize=(10, 6))
-plt.bar(list(metrics_k_1_train.keys())[:-1], list(metrics_k_1_train.values())[:-1], color='skyblue')
-
-plt.show()
+# # --------------- Візуалізація Confusion Matrix -------------------- #
+#
+# plt.figure(figsize=(10, 8))
+# heatmap_train = sns.heatmap(metrics_k_1_train["Confusion Matrix"], annot=True, fmt='d', cmap='Blues', xticklabels=class_labels,
+#                             yticklabels=class_labels)
+#
+# plt.show()
+#
+# # ------------- Візуалізація метрик --------------- #
+#
+# plt.figure(figsize=(10, 6))
+# plt.bar(list(metrics_k_1_train.keys())[:-1], list(metrics_k_1_train.values())[:-1], color='skyblue')
+#
+# plt.show()
 
 # Task 8
 
